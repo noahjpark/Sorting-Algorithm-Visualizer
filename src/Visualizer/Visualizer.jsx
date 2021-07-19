@@ -2,30 +2,32 @@ import React from 'react';
 import { getSortAnimations } from '../Algorithms/SortingAlgorithms.js';
 import './Visualizer.css';
 
-const SPEED = .1;
-const BARS = 250;
+const SPEED = 75;
+const BARS = 200;
 const PRIMARY_COLOR = 'black';
-const SECONDARY_COLOR = 'firebrick';
+const SECONDARY_COLOR = 'crimson';
 const SORTED = 'chartreuse';
 const MOVED = 'darkviolet';
 
 export default class Visualizer extends React.Component {
     constructor(props) {
         super (props);
-
         this.state = {
             array: [],
         };
     }
 
     componentDidMount() {
-        this.shuffleArray();
+        this.makeArray();
     }
 
-    shuffleArray() {
+    makeArray() {
         const array = [];
-        for (let i = 0; i < BARS; i++)
-            array.push(randomInt(1, 500));
+        const idx = randomInt(0, BARS);
+        for (let i = 0; i < BARS; i++) {
+            if (i === idx) array.push(750);
+            else array.push(randomInt(5, 750));
+        }
         this.setState( { array } );
     }
 
@@ -69,11 +71,10 @@ export default class Visualizer extends React.Component {
 
     visualizeInsertionSort() {
         const animations = getSortAnimations(this.state.array, "Insertion");
+        const bars = document.getElementsByClassName('array-bar');
 
         for (let i = 0; i < animations.length; i++) {
-            const bars = document.getElementsByClassName('array-bar');
             const compare = animations[i][2] === 0;
-            console.log(animations[i][0] + " " + animations[i][1] + " " + animations[i][2]);
 
             if (compare) {
                 const [b1idx, b2idx, c] = animations[i];
@@ -93,24 +94,25 @@ export default class Visualizer extends React.Component {
                 }, i * SPEED);
             }
         }
+
+        this.markAsSorted(animations, bars);
     }
 
     render() {
-        const {array} = this.state;
+        const { array, isRunning } = this.state;
 
         return (
-            <div className="array-container">
-                {array.map((value, idx) => (
-                    <div className="array-bar" 
-                        key = {idx} 
-                        style={{
-                            backgroundColor: PRIMARY_COLOR,
-                            height: `${value}px`,
-                    }}></div>
-                ))}
-                <button onClick={() => this.shuffleArray()}>Shuffle Array</button>
-                <button onClick={() => this.visualizeSelectionSort()}>Selection Sort</button>
-                <button onClick={() => this.visualizeInsertionSort()}>Insertion Sort</button>
+            <div id="page">
+                <div className="menu">
+                    <div className="button" onClick={!isRunning ? () => this.makeArray() : null}>Make New Array</div>
+                </div>
+                <div id="array-container">
+                    {array.map((value, idx) => ( <div className="array-bar" key = {idx} style={{ backgroundColor: PRIMARY_COLOR, height: `${value}px`, }} /> ))}
+                </div>
+                <div className="menu">
+                    <div className="button" onClick={!isRunning ? () => this.visualizeSelectionSort() : null}>Selection Sort</div>
+                    <div className="button" onClick={!isRunning ? () => this.visualizeInsertionSort() : null}>Insertion Sort</div>
+                </div>
             </div>
         );
     }
