@@ -38,7 +38,11 @@ function insertionSortHelper(copy, animations) {
         for (let j = i; j > 0; j--) {
             animations.push([j, j - 1, 0]);
             animations.push([j - 1, j, 0]);
-            if (copy[j] > copy[j - 1]) break;
+            if (copy[j] > copy[j - 1]) {
+                animations.push([j, copy[j], 1]);
+                animations.push([j - 1, copy[j - 1], 1]);
+                break;
+            }
             swap(copy, j, j - 1);
             animations.push([j, copy[j], 1]);
             animations.push([j - 1, copy[j - 1], 1]);
