@@ -37,7 +37,6 @@ function insertionSortHelper(copy, animations) {
     for (let i = 1; i < n; i++) {
         for (let j = i; j > 0; j--) {
             animations.push([j, j - 1, 0]);
-            animations.push([j - 1, j, 0]);
             if (copy[j] > copy[j - 1]) {
                 animations.push([j, copy[j], 1]);
                 animations.push([j - 1, copy[j - 1], 1]);
@@ -59,9 +58,7 @@ function bubbleSortHelper(copy, animations) {
 
         for (let i = 0; i < end; i++) {
             animations.push([i, i + 1, 0]);
-            animations.push([i + 1, i, 0]);
             animations.push([i, i + 1, -1]);
-            animations.push([i + 1, i, -1]);
             if (copy[i] > copy[i + 1]) {
                 swap(copy, i, i + 1);
                 animations.push([i, copy[i], 2]);
@@ -76,7 +73,7 @@ function bubbleSortHelper(copy, animations) {
 
 function mergeSortHelper(copy, animations, left, right) {
     if (left < right) {
-        let mid = left + (right - left) / 2;
+        const mid = left + parseInt((right - left) / 2);
         mergeSortHelper(copy, animations, left, mid);
         mergeSortHelper(copy, animations, mid + 1, right);
         merge(copy, animations, left, mid, right);
@@ -85,18 +82,30 @@ function mergeSortHelper(copy, animations, left, right) {
 
 function merge(copy, animations, left, mid, right) {
     let n1 = mid - left + 1, n2 = right - mid;
+    let t1 = [], t2 = [];
 
-    let i = 0, j = 0;
+    for (let i = 0; i < n1; i++)
+        t1[i] = copy[left + i];
+
+    for (let j = 0; j < n2; j++)
+        t2[j] = copy[mid + j + 1];
+
+    let i = 0, j = 0, idx = left;
     while (i < n1 && j < n2) {
-        animations.push([left + i, mid + j, 0]);
-        animations.push([mid + j, left + i, 0]);
-        animations.push([left + i, mid + j, 1]);
-        animations.push([mid + j, left + i, 1]);
-        if (copy[left + i] < copy[mid + j]) i++;
-        else {
-            swap(copy, left + i, mid + j);
-            j++;
-        }
+        animations.push([left + i, mid + j + 1, 0]);
+        animations.push([left + i, mid + j + 1, -1]);
+        copy[idx] = t1[i] < t2[j] ? t1[i++] : t2[j++];
+        animations.push([idx, copy[idx++], 1]);
+    }
+
+    while (i < n1) {
+        copy[idx] = t1[i++];
+        animations.push([idx, copy[idx++], 1]);
+    }
+
+    while (j < n2) {
+        copy[idx] = t2[j++];
+        animations.push([idx, copy[idx++], 1]);
     }
 }
 

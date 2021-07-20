@@ -203,6 +203,30 @@ export default class Visualizer extends React.Component {
             const animations = getSortAnimations(this.state.array, "Merge");
             const bars = document.getElementsByClassName('array-bar');
 
+            for (let i = 0; i < animations.length; i++) {
+                const compare = animations[i][2] <= 0;
+
+                console.log(animations[i][0] + " " + animations[i][1] + " " + animations[i][2]);
+
+                if (compare) {
+                    const [b1idx, b2idx, c] = animations[i];
+                    const b1style = bars[b1idx].style;
+                    const b2style = bars[b2idx].style;
+                    const color = c === 0 ? COMPARE : MOVED;
+                    setTimeout(() => {
+                        b1style.backgroundColor = color;
+                        b2style.backgroundColor = color;
+                    }, i * this.state.speed);
+                } else {
+                    setTimeout(() => {
+                        const [b1idx, height] = animations[i];
+                        const b1style = bars[b1idx].style;
+                        b1style.height = `${height}px`;
+                        b1style.backgroundColor = MOVED;
+                    }, i * this.state.speed);
+                }
+            }
+
             this.markAsSorted(animations, bars);
         }, 100);
     }
