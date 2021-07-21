@@ -6,6 +6,8 @@ const UNSORTED = 'black';
 const COMPARE = 'crimson';
 const SORTED = 'chartreuse';
 const MOVED = 'darkviolet';
+const SCANNED = 'lightseagreen';
+const CONTRAST = 'ivory';
 
 export default class Visualizer extends React.Component {
     constructor(props) {
@@ -108,9 +110,7 @@ export default class Visualizer extends React.Component {
             const bars = document.getElementsByClassName('array-bar');
 
             for (let i = 0; i < animations.length; i++) {
-                const compare = animations[i][2] < 1;
-
-                if (compare) {
+                if (animations[i][2] < 1) {
                     const [b1idx, b2idx, c] = animations[i];
                     const b1style = bars[b1idx].style;
                     const b2style = bars[b2idx].style;
@@ -121,10 +121,10 @@ export default class Visualizer extends React.Component {
                     }, i * this.state.speed);
                 } else {
                     setTimeout(() => {
-                        const [b1idx, height, s] = animations[i];
-                        const b1style = bars[b1idx].style;
-                        b1style.height = `${height}px`;
-                        if (s === 1) b1style.backgroundColor = MOVED;
+                        const [idx, height, s] = animations[i];
+                        const bstyle = bars[idx].style;
+                        bstyle.height = `${height}px`;
+                        if (s === 1) bstyle.backgroundColor = MOVED;
                     }, i * this.state.speed);
                 }
             }
@@ -140,9 +140,7 @@ export default class Visualizer extends React.Component {
             const bars = document.getElementsByClassName('array-bar');
 
             for (let i = 0; i < animations.length; i++) {
-                const compare = animations[i][2] === 0;
-
-                if (compare) {
+                if (animations[i][2] === 0) {
                     const [b1idx, b2idx, c] = animations[i];
                     const b1style = bars[b1idx].style;
                     const b2style = bars[b2idx].style;
@@ -153,10 +151,10 @@ export default class Visualizer extends React.Component {
                     }, i * this.state.speed);
                 } else {
                     setTimeout(() => {
-                        const [b1idx, height] = animations[i];
-                        const b1style = bars[b1idx].style;
-                        b1style.height = `${height}px`;
-                        b1style.backgroundColor = MOVED;
+                        const [idx, height] = animations[i];
+                        const bstyle = bars[idx].style;
+                        bstyle.height = `${height}px`;
+                        bstyle.backgroundColor = MOVED;
                     }, i * this.state.speed);
                 }
             }
@@ -172,9 +170,7 @@ export default class Visualizer extends React.Component {
             const bars = document.getElementsByClassName('array-bar');
 
             for (let i = 0; i < animations.length; i++) {
-                const compare = animations[i][2] <= 0;
-
-                if (compare) {
+                if (animations[i][2] < 1) {
                     const [b1idx, b2idx, c] = animations[i];
                     const b1style = bars[b1idx].style;
                     const b2style = bars[b2idx].style;
@@ -185,10 +181,10 @@ export default class Visualizer extends React.Component {
                     }, i * this.state.speed);
                 } else {
                     setTimeout(() => {
-                        const [b1idx, height, c] = animations[i];
-                        const b1style = bars[b1idx].style;
-                        b1style.height = `${height}px`;
-                        if (c === 1) b1style.backgroundColor = MOVED;
+                        const [idx, height, c] = animations[i];
+                        const bstyle = bars[idx].style;
+                        bstyle.height = `${height}px`;
+                        if (c === 1) bstyle.backgroundColor = MOVED;
                     }, i * this.state.speed);
                 }
             }
@@ -204,25 +200,109 @@ export default class Visualizer extends React.Component {
             const bars = document.getElementsByClassName('array-bar');
 
             for (let i = 0; i < animations.length; i++) {
-                const compare = animations[i][2] <= 0;
-
-                console.log(animations[i][0] + " " + animations[i][1] + " " + animations[i][2]);
-
-                if (compare) {
+                if (animations[i][2] < 1) {
                     const [b1idx, b2idx, c] = animations[i];
                     const b1style = bars[b1idx].style;
                     const b2style = bars[b2idx].style;
-                    const color = c === 0 ? COMPARE : MOVED;
+                    const color = c === 0 ? CONTRAST : MOVED;
                     setTimeout(() => {
                         b1style.backgroundColor = color;
                         b2style.backgroundColor = color;
                     }, i * this.state.speed);
                 } else {
                     setTimeout(() => {
-                        const [b1idx, height] = animations[i];
-                        const b1style = bars[b1idx].style;
-                        b1style.height = `${height}px`;
-                        b1style.backgroundColor = MOVED;
+                        const [idx, height] = animations[i];
+                        const bstyle = bars[idx].style;
+                        bstyle.height = `${height}px`;
+                        bstyle.backgroundColor = MOVED;
+                    }, i * this.state.speed);
+                }
+            }
+
+            this.markAsSorted(animations, bars);
+        }, 100);
+    }
+
+    visualizeQuickSort() {
+        this.markInProgress("Quick");
+        setTimeout(() => {
+            const animations = getSortAnimations(this.state.array, "Quick");
+            const bars = document.getElementsByClassName('array-bar');
+
+            for (let i = 0; i < animations.length; i++) {
+                if (animations[i][2] < 1) {
+                    const [b1idx, b2idx, c] = animations[i];
+                    const b1style = bars[b1idx].style;
+                    const b2style = bars[b2idx].style;
+                    const color = c === 0 ? CONTRAST : SCANNED;
+                    setTimeout(() => {
+                        b1style.backgroundColor = color;
+                        b2style.backgroundColor = color;
+                    }, i * this.state.speed);
+                } else {
+                    setTimeout(() => {
+                        const [idx, height] = animations[i];
+                        const bstyle = bars[idx].style;
+                        bstyle.height = `${height}px`;
+                        bstyle.backgroundColor = MOVED;
+                    }, i * this.state.speed);
+                }
+            }
+
+            this.markAsSorted(animations, bars);
+        }, 100);
+    }
+
+    visualizeCountingSort() {
+        this.markInProgress("Counting");
+        setTimeout(() => {
+            const animations = getSortAnimations(this.state.array, "Counting");
+            const bars = document.getElementsByClassName('array-bar');
+
+            for (let i = 0; i < animations.length; i++) {
+                if (animations[i][1] === 0) {
+                    const [bidx] = animations[i];
+                    const bstyle = bars[bidx].style;
+                    const color = SCANNED;
+                    setTimeout(() => {
+                        bstyle.backgroundColor = color;
+                    }, i * this.state.speed);
+                } else {
+                    setTimeout(() => {
+                        const [idx, height] = animations[i];
+                        const bstyle = bars[idx].style;
+                        bstyle.height = `${height}px`;
+                        bstyle.backgroundColor = MOVED;
+                    }, i * this.state.speed);
+                }
+            }
+
+            this.markAsSorted(animations, bars);
+        }, 100);
+    }
+
+    visualizeHeapSort() {
+        this.markInProgress("Heap");
+        setTimeout(() => {
+            const animations = getSortAnimations(this.state.array, "Heap");
+            const bars = document.getElementsByClassName('array-bar');
+
+            for (let i = 0; i < animations.length; i++) {
+                if (animations[i][2] <= 0) {
+                    const [b1idx, b2idx, c] = animations[i];
+                    const b1style = bars[b1idx].style;
+                    const b2style = bars[b2idx].style;
+                    const color = c === 0 ? CONTRAST : SCANNED;
+                    setTimeout(() => {
+                        b1style.backgroundColor = color;
+                        b2style.backgroundColor = color;
+                    }, i * this.state.speed);
+                } else {
+                    setTimeout(() => {
+                        const [idx, height, c] = animations[i];
+                        const bstyle = bars[idx].style;
+                        bstyle.height = `${height}px`;
+                        bstyle.backgroundColor = c === 2 ? SCANNED : MOVED;
                     }, i * this.state.speed);
                 }
             }
@@ -235,25 +315,25 @@ export default class Visualizer extends React.Component {
         const { array, inProgress, algorithm } = this.state;
         const numHeightTop = Math.floor(getHeight().height / 8);
         const numHeightBottom = Math.floor(getHeight().height / 10);
-        const numWidth = Math.floor(getWidth().width / (array.length * 1.25));
+        const numWidth = Math.floor(getWidth().width / (array.length * 1.4));
         const numMargin = this.getMargin();
 
         return (
             <div id="page">
                 <div className="menu" style={{height: `${numHeightTop}px`}}>
                     <div id="makeArrayContainer">
-                        <p>Make New Array</p>
+                        <h3>Make New Array</h3>
                         <div className="makeArrayButton" onClick={!inProgress ? () => this.makeArray(array.length - 1) : null}>Shuffle!</div>
                     </div>
                     <div className="space" />
                     <div id="sizeSliderContainer">
-                        <p>Change Array Size</p>
-                        <input type="range" min="1" max="250" onChange={!inProgress ? this.handleSizeChange : null} class="slider" />
+                        <h3>Change Array Size</h3>
+                        <input type="range" min="1" max="250" onChange={!inProgress ? this.handleSizeChange : null} className="slider" />
                     </div>
                     <div className="space" />
                     <div id="speedSliderContainer">
-                        <p>Change Sorting Speed</p>
-                        <input type="range" min="1" max="75" onChange={!inProgress ? this.handleSpeedChange : null} class="slider" />
+                        <h3>Change Sorting Speed</h3>
+                        <input type="range" min="1" max="75" onChange={!inProgress ? this.handleSpeedChange : null} className="slider" style={{direction: 'rtl'}} />
                     </div>
                 </div>
                 <div id="array-container">
@@ -264,6 +344,9 @@ export default class Visualizer extends React.Component {
                     <div className={algorithm === "Insertion" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeInsertionSort() : null}>Insertion Sort</div>
                     <div className={algorithm === "Bubble" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeBubbleSort() : null}>Bubble Sort</div>
                     <div className={algorithm === "Merge" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeMergeSort() : null}>Merge Sort</div>
+                    <div className={algorithm === "Quick" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeQuickSort() : null}>Quick Sort</div>
+                    <div className={algorithm === "Counting" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeCountingSort() : null}>Counting Sort</div>
+                    <div className={algorithm === "Heap" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeHeapSort() : null}>Heap Sort</div>
                 </div>
             </div>
         );
