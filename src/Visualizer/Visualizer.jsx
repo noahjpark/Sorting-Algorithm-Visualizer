@@ -313,7 +313,7 @@ export default class Visualizer extends React.Component {
 
     render() {
         const { array, inProgress, algorithm } = this.state;
-        const numHeightTop = Math.floor(getHeight().height / 8);
+        const numHeightTop = Math.floor(getHeight().height / 7);
         const numHeightBottom = Math.floor(getHeight().height / 10);
         const numWidth = Math.floor(getWidth().width / (array.length * 1.4));
         const numMargin = this.getMargin();
