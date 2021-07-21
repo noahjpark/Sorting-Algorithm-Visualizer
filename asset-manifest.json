@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/Sorting-Algorithm-Visualizer/static/css/main.d90fd89f.chunk.css",
-    "main.js": "/Sorting-Algorithm-Visualizer/static/js/main.94e3ebfc.chunk.js",
-    "main.js.map": "/Sorting-Algorithm-Visualizer/static/js/main.94e3ebfc.chunk.js.map",
+    "main.css": "/Sorting-Algorithm-Visualizer/static/css/main.c941b1c0.chunk.css",
+    "main.js": "/Sorting-Algorithm-Visualizer/static/js/main.1de2fdc6.chunk.js",
+    "main.js.map": "/Sorting-Algorithm-Visualizer/static/js/main.1de2fdc6.chunk.js.map",
     "runtime-main.js": "/Sorting-Algorithm-Visualizer/static/js/runtime-main.1f313d76.js",
     "runtime-main.js.map": "/Sorting-Algorithm-Visualizer/static/js/runtime-main.1f313d76.js.map",
     "static/js/2.0d220e15.chunk.js": "/Sorting-Algorithm-Visualizer/static/js/2.0d220e15.chunk.js",
@@ -10,13 +10,13 @@
     "static/js/3.13ed5bb2.chunk.js": "/Sorting-Algorithm-Visualizer/static/js/3.13ed5bb2.chunk.js",
     "static/js/3.13ed5bb2.chunk.js.map": "/Sorting-Algorithm-Visualizer/static/js/3.13ed5bb2.chunk.js.map",
     "index.html": "/Sorting-Algorithm-Visualizer/index.html",
-    "static/css/main.d90fd89f.chunk.css.map": "/Sorting-Algorithm-Visualizer/static/css/main.d90fd89f.chunk.css.map",
+    "static/css/main.c941b1c0.chunk.css.map": "/Sorting-Algorithm-Visualizer/static/css/main.c941b1c0.chunk.css.map",
     "static/js/2.0d220e15.chunk.js.LICENSE.txt": "/Sorting-Algorithm-Visualizer/static/js/2.0d220e15.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.1f313d76.js",
     "static/js/2.0d220e15.chunk.js",
-    "static/css/main.d90fd89f.chunk.css",
-    "static/js/main.94e3ebfc.chunk.js"
+    "static/css/main.c941b1c0.chunk.css",
+    "static/js/main.1de2fdc6.chunk.js"
   ]
 }
