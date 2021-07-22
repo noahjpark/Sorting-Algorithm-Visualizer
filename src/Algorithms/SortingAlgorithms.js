@@ -1,29 +1,29 @@
+// Driver function calls the appropriate sorting algorithm and checks to make sure it worked by outputting the log of the compared result
 export function getSortAnimations(arr, algorithm) {
     const animations = [];
-    const copy = [];
-    for (let i = 0; i < arr.length; i++)
-        copy[i] = arr[i];
-    copy.sort((a, b) => { return a - b });
+    const copy = getSortedArray(arr);
 
-    if (algorithm === "Selection") selectionSortHelper(arr, animations);
-    else if (algorithm === "Insertion") insertionSortHelper(arr, animations);
-    else if (algorithm === "Bubble") bubbleSortHelper(arr, animations);
-    else if (algorithm === "Merge") mergeSortHelper(arr, animations, 0, arr.length - 1);
-    else if (algorithm === "Quick") quickSortHelper(arr, animations, 0, arr.length - 1);
-    else if (algorithm === "Counting") countingSortHelper(arr, animations);
-    else if (algorithm === "Heap") heapSortHelper(arr, animations);
-    else if (algorithm === "Radix") radixSortHelper(arr, animations);
-    else if (algorithm === "Shell") shellSortHelper(arr, animations);
-    else if (algorithm === "Cocktail") cocktailShakerSortHelper(arr, animations);
-    else if (algorithm === "Gnome") gnomeSortHelper(arr, animations);
-    else if (algorithm === "Bitonic") bitonicSortHelper(arr, animations, 0, arr.length, 1);
+    if (algorithm === "Selection") selectionSort(arr, animations);
+    else if (algorithm === "Insertion") insertionSort(arr, animations);
+    else if (algorithm === "Bubble") bubbleSort(arr, animations);
+    else if (algorithm === "Merge") mergeSort(arr, animations, 0, arr.length - 1);
+    else if (algorithm === "Quick") quickSort(arr, animations, 0, arr.length - 1);
+    else if (algorithm === "Counting") countingSort(arr, animations);
+    else if (algorithm === "Heap") heapSort(arr, animations);
+    else if (algorithm === "Radix") radixSort(arr, animations);
+    else if (algorithm === "Shell") shellSort(arr, animations);
+    else if (algorithm === "Cocktail") cocktailShakerSort(arr, animations);
+    else if (algorithm === "Gnome") gnomeSort(arr, animations);
+    else if (algorithm === "Bitonic") bitonicSort(arr, animations, 0, arr.length, 1);
+    else if (algorithm === "Comb") combSort(arr, animations);
 
     console.log(areEqual(copy, arr));
 
     return animations;
 }
 
-function selectionSortHelper(arr, animations) {
+// Selection Sort algorithm
+function selectionSort(arr, animations) {
     const n = arr.length;
 
     for (let i = 0; i < n; i++) {
@@ -44,7 +44,8 @@ function selectionSortHelper(arr, animations) {
     }
 }
 
-function insertionSortHelper(arr, animations) {
+// Insertion Sort algorithm
+function insertionSort(arr, animations) {
     const n = arr.length;
     animations.push([0, arr[0], 1])
 
@@ -63,7 +64,8 @@ function insertionSortHelper(arr, animations) {
     }
 }
 
-function bubbleSortHelper(arr, animations) {
+// Bubble Sort algorithm
+function bubbleSort(arr, animations) {
     const n = arr.length;
     let sorted = false;
 
@@ -85,15 +87,17 @@ function bubbleSortHelper(arr, animations) {
     }
 }
 
-function mergeSortHelper(arr, animations, left, right) {
+// Merge Sort algorithm
+function mergeSort(arr, animations, left, right) {
     if (left >= right) return;
 
     const mid = left + Math.floor((right - left) / 2);
-    mergeSortHelper(arr, animations, left, mid);
-    mergeSortHelper(arr, animations, mid + 1, right);
+    mergeSort(arr, animations, left, mid);
+    mergeSort(arr, animations, mid + 1, right);
     merge(arr, animations, left, mid, right);
 }
 
+// Merge helper to Merge Sort
 function merge(arr, animations, left, mid, right) {
     let n1 = mid - left + 1, n2 = right - mid;
     let t1 = [], t2 = [];
@@ -123,14 +127,16 @@ function merge(arr, animations, left, mid, right) {
     }
 }
 
-function quickSortHelper(arr, animations, left, right) {
+// Quick Sort algorithm
+function quickSort(arr, animations, left, right) {
     if (left >= right) return;
 
     let p = partition(arr, animations, left, right);
-    quickSortHelper(arr, animations, left, p - 1);
-    quickSortHelper(arr, animations, p + 1, right);
+    quickSort(arr, animations, left, p - 1);
+    quickSort(arr, animations, p + 1, right);
 }
 
+// Partition helper to Quick Sort
 function partition(arr, animations, left, right) {
     let pivot = arr[right], i = left;
 
@@ -149,7 +155,8 @@ function partition(arr, animations, left, right) {
     return i;
 }
 
-function countingSortHelper(arr, animations) {
+// Counting Sort algorithm
+function countingSort(arr, animations) {
     let n = arr.length, idx = 0;
     const freq = [];
 
@@ -170,7 +177,8 @@ function countingSortHelper(arr, animations) {
     }
 }
 
-function heapSortHelper(arr, animations) {
+// Heap Sort algorithm
+function heapSort(arr, animations) {
     let n = arr.length;
 
     for (let i = Math.floor(n / 2) - 1; i >= 0; i--)
@@ -185,6 +193,7 @@ function heapSortHelper(arr, animations) {
     animations.push([0, arr[0], 1]);
 }
 
+// Heapify helper to Heap Sort
 function heapify(arr, animations, n, i) {
     let largest = i, l = 2 * i + 1, r = 2 * i + 2;
 
@@ -207,12 +216,14 @@ function heapify(arr, animations, n, i) {
     }
 }
 
-function radixSortHelper(arr, animations) {
+// Radix Sort
+function radixSort(arr, animations) {
     let max = findMax(arr);
     for (let i = 1; Math.floor(max / i) > 0; i *= 10)
         countingSortRadix(arr, i, animations);
 }
 
+// Counting Sort helper to Radix Sort
 function countingSortRadix(arr, exp, animations) {
     let res = [];
     let counts = [];
@@ -246,7 +257,8 @@ function countingSortRadix(arr, exp, animations) {
     animations.push([n - 1, arr[n - 1], 2]);
 }
 
-function shellSortHelper(arr, animations) {
+// Shell Sort algorithm
+function shellSort(arr, animations) {
     const n = arr.length;
 
     for (let i = Math.floor(n / 2); i > 0; i = (Math.floor(i / 2))) {
@@ -270,7 +282,8 @@ function shellSortHelper(arr, animations) {
     animations.push([0, arr[0], 1]);
 }
 
-function cocktailShakerSortHelper(arr, animations) {
+// Cocktail Shaker Sort algorithm
+function cocktailShakerSort(arr, animations) {
     let sorted = false;
     let n = arr.length, start = 0, end = n - 1;
 
@@ -307,7 +320,8 @@ function cocktailShakerSortHelper(arr, animations) {
     }
 }
 
-function gnomeSortHelper(arr, animations) {
+// Gnome Sort algorithm
+function gnomeSort(arr, animations) {
     let i = 0, n = arr.length;
 
     while (i < n) {
@@ -324,16 +338,18 @@ function gnomeSortHelper(arr, animations) {
     }
 }
 
-function bitonicSortHelper(arr, animations, low, count, dir) {
+// Bitonic Sort algorithm
+function bitonicSort(arr, animations, low, count, dir) {
     if (count > 1) {
         let k = Math.floor(count / 2);
 
-        bitonicSortHelper(arr, animations, low, k, 1);
-        bitonicSortHelper(arr, animations, low + k, k, 0);
+        bitonicSort(arr, animations, low, k, 1);
+        bitonicSort(arr, animations, low + k, k, 0);
         bitonicMerge(arr, animations, low, count, dir);
     }
 }
 
+// Bitonic Merge helper to Bitonic Sort
 function bitonicMerge(arr, animations, low, count, dir) {
     if (count > 1) {
         let k = Math.floor(count / 2);
@@ -346,6 +362,7 @@ function bitonicMerge(arr, animations, low, count, dir) {
     }
 }
 
+// Bitonic Swap helper to Bitonic Sort
 function bitonicSwap(arr, animations, i, j, dir) {
     animations.push([i, j, 0]);
     animations.push([i, j, -1]);
@@ -356,6 +373,37 @@ function bitonicSwap(arr, animations, i, j, dir) {
     }
 }
 
+// Comb Sort algorithm
+function combSort(arr, animations) {
+    let n = arr.length, gap = n;
+    let sorted = false;
+
+    while (gap != 1 || !sorted) {
+        gap = nextGap(gap);
+        sorted = true;
+
+        for (let i = 0; i < n - gap; i++) {
+            animations.push([i, i + gap, 0]);
+            animations.push([i, i + gap, -1]);
+            if (arr[i] > arr[i + gap]) {
+                swap(arr, i, i + gap);
+                animations.push([i, arr[i], 1]);
+                animations.push([i + gap, arr[i + gap], 1]);
+                sorted = false;
+            }
+        }
+    }
+
+    animations.push([n - 1, arr[n - 1], 1]);
+}
+
+// Next Gap helper to Comb Sort
+function nextGap(gap) {
+    gap = parseInt((gap * 10) / 13, 10);
+    return gap >= 1 ? gap : 1;
+}
+
+// Finds the max in the array
 function findMax(arr) {
     let max = 0;
     for (let i = 0; i < arr.length - 1; i++)
@@ -363,24 +411,37 @@ function findMax(arr) {
     return max;
 }
 
+// Swaps the values of two indices i and j in the array
 function swap(arr, i, j) {
     let temp = arr[i];
     arr[i] = arr[j];
     arr[j] = temp;
 }
 
+// Prints the array
 function print(arr) {
     for (let i = 0; i < arr.length; i++)
         console.log(arr[i]);
 }
 
+// Prints the compared arrays
 function compare(arr, sorted) {
     for (let i = 0; i < arr.length; i++)
         if (arr[i] !== sorted[i]) console.log(i + ": " + arr[i] + " " + sorted[i]);
 }
 
+// Checks if two arrays are identical
 function areEqual(arr, sorted) {
     for (let i = 0; i < arr.length; i++)
         if (arr[i] !== sorted[i]) return false;
     return true;
+}
+
+// Makes a copy of the array and sorts it
+function getSortedArray(arr) {
+    let copy = [];
+    for (let i = 0; i < arr.length; i++)
+        copy[i] = arr[i];
+    copy.sort((a, b) => { return a - b });
+    return copy;
 }

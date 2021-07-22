@@ -22,36 +22,38 @@ export default class Visualizer extends React.Component {
         this.handleSpeedChange = this.handleSpeedChange.bind(this);
     }
 
+    // Initialize array to size 50
     componentDidMount() {
         this.makeArray(49);
     }
 
+    // Size change
     handleSizeChange(event) {
         this.makeArray(event.target.value);
     }
 
+    // Speed change
     handleSpeedChange(event) {
-        this.updateSpeed(event.target.value);
-    }
-
-    updateSpeed(newSpeed) {
         this.setState(() => {
-            return { speed: newSpeed };
+            return { speed: event.target.value };
         });
     }
 
+    // Marks the state as in progress and updates the current algorithm
     markInProgress(alg) {
         this.setState(() => {
             return { inProgress: true, algorithm: alg };
         });
     }
 
+    // Marks the state as finished and clears the current algorithm
     markAsFinished() {
         this.setState(() => {
             return { inProgress: false, algorithm: "" };
         });
     }
 
+    // Makes a new array with the given number of bars plus one (a bar of max value is put in its sorted spot at the end for visual assistance) if the state is available
     makeArray(bars) {
         if (!this.state.inProgress) {
             const array = [];
@@ -64,10 +66,12 @@ export default class Visualizer extends React.Component {
         }
     }
 
+    // Checks if the value n is a power of two
     sizeIsPowerOfTwo(n) {
         return parseInt( (Math.ceil((Math.log(n) / Math.log(2))))) === parseInt( (Math.floor(((Math.log(n) / Math.log(2))))));
     }
 
+    // Finds the nearest power of two to the current array size (helper for bitonic sort)
     findNearestPowerOfTwo() {
         let n = this.state.array.length, l = n - 1, r = n + 1;
 
@@ -82,6 +86,7 @@ export default class Visualizer extends React.Component {
         return 2;
     }
 
+    // Calculates the margin between each bar depending on the array's length
     getMargin() {
         const { array } = this.state;
         return array.length < 5 ?
@@ -93,6 +98,7 @@ export default class Visualizer extends React.Component {
             1.5 : array.length < 130 ? 1 : 0.5;
     }
 
+    // Marks the array as sorted (turns green) then calls the reset helper
     markAsSorted(animations, bars) {
         for (let i = 0; i < animations.length; i++) {
             setTimeout(() => {
@@ -105,6 +111,7 @@ export default class Visualizer extends React.Component {
         this.reset(animations, bars);
     }
 
+    // Helper to reset all bars to the original color, black, mark the state as available, and log "Finished"
     reset(animations, bars) {
         for (let i = 0; i < animations.length; i++) {
             setTimeout(() => {
@@ -119,6 +126,7 @@ export default class Visualizer extends React.Component {
         }, (animations.length * this.state.speed) + 1501);
     }
 
+    // Visualizes selection sort
     visualizeSelectionSort() {
         this.markInProgress("Selection");
         setTimeout(() => {
@@ -149,6 +157,7 @@ export default class Visualizer extends React.Component {
         }, 100);
     }
 
+    // Visualizes Insertion sort
     visualizeInsertionSort() {
         this.markInProgress("Insertion");
         setTimeout(() => {
@@ -179,6 +188,7 @@ export default class Visualizer extends React.Component {
         }, 100);
     }
 
+    // Visualizes Bubble sort
     visualizeBubbleSort() {
         this.markInProgress("Bubble");
         setTimeout(() => {
@@ -209,6 +219,7 @@ export default class Visualizer extends React.Component {
         }, 100);
     }
 
+    // Visualizes Merge sort
     visualizeMergeSort() {
         this.markInProgress("Merge");
         setTimeout(() => {
@@ -239,6 +250,7 @@ export default class Visualizer extends React.Component {
         }, 100);
     }
 
+    // Visualizes Quick sort
     visualizeQuickSort() {
         this.markInProgress("Quick");
         setTimeout(() => {
@@ -269,6 +281,7 @@ export default class Visualizer extends React.Component {
         }, 100);
     }
 
+    // Visualizes Counting sort
     visualizeCountingSort() {
         this.markInProgress("Counting");
         setTimeout(() => {
@@ -297,6 +310,7 @@ export default class Visualizer extends React.Component {
         }, 100);
     }
 
+    // Visualizes Heap sort
     visualizeHeapSort() {
         this.markInProgress("Heap");
         setTimeout(() => {
@@ -327,6 +341,7 @@ export default class Visualizer extends React.Component {
         }, 100);
     }
 
+    // Visualizes Radix sort
     visualizeRadixSort() {
         this.markInProgress("Radix");
         setTimeout(() => {
@@ -346,6 +361,7 @@ export default class Visualizer extends React.Component {
         }, 100);
     }
 
+    // Visualizes Shell sort
     visualizeShellSort() {
         this.markInProgress("Shell");
         setTimeout(() => {
@@ -376,6 +392,7 @@ export default class Visualizer extends React.Component {
         }, 100);
     }
 
+    // Visualizes Cocktail Shaker sort
     visualizeCocktailShakerSort() {
         this.markInProgress("Cocktail");
         setTimeout(() => {
@@ -405,6 +422,7 @@ export default class Visualizer extends React.Component {
         }, 100);
     }
 
+    // Visualizes Gnome sort
     visualizeGnomeSort() {
         this.markInProgress("Gnome");
         setTimeout(() => {
@@ -435,6 +453,7 @@ export default class Visualizer extends React.Component {
         }, 100);
     }
 
+    // Visualizes Bitonic sort
     visualizeBitonicSort() {
         if (!this.sizeIsPowerOfTwo(this.state.array.length))
             this.makeArray(this.findNearestPowerOfTwo() - 1);
@@ -467,15 +486,40 @@ export default class Visualizer extends React.Component {
         }, 100);
     }
 
+    // Visualizes Comb sort
+    visualizeCombSort() {
+        this.markInProgress("Comb");
+        setTimeout(() => {
+            const animations = getSortAnimations(this.state.array, "Comb");
+            const bars = document.getElementsByClassName('array-bar');
+
+            for (let i = 0; i < animations.length; i++) {
+                if (animations[i][2] <= 0) {
+                    const [b1idx, b2idx, c] = animations[i];
+                    const b1style = bars[b1idx].style;
+                    const b2style = bars[b2idx].style;
+                    const color = c === 0 ? COMPARE : UNSORTED;
+                    setTimeout(() => {
+                        b1style.backgroundColor = color;
+                        b2style.backgroundColor = color;
+                    }, i * this.state.speed);
+                } else {
+                    setTimeout(() => {
+                        const [idx, height] = animations[i];
+                        const bstyle = bars[idx].style;
+                        bstyle.height = `${height}px`;
+                    }, i * this.state.speed);
+                }
+            }
+
+            this.markAsSorted(animations, bars);
+        }, 100);
+    }
+
+    // Renders the page
     render() {
         const { array, inProgress, algorithm } = this.state;
-        const h = getHeight().height;
-        const percentBottomPadding = 
-            h <= 1080 ? 2 :
-            h <= 1250 ? 5 : 
-            h <= 1275 ? 12 :
-            h <= 1300 ? 17 :
-            h <= 1325 ? 25 : 35;
+        const percentBottomPadding = getPadding();
         const numWidth = Math.floor(getWidth().width / (array.length * 1.4));
         const numMargin = this.getMargin();
 
@@ -517,6 +561,7 @@ export default class Visualizer extends React.Component {
                             <div className={algorithm === "Cocktail" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeCocktailShakerSort() : null}>Cocktail Shaker Sort</div>
                             <div className={algorithm === "Gnome" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeGnomeSort() : null}>Gnome Sort</div>
                             <div className={algorithm === "Bitonic" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeBitonicSort() : null}>Bitonic Sort</div>
+                            <div className={algorithm === "Comb" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeCombSort() : null}>Comb Sort</div>
                         </div>
                     </div>
                 </div>
@@ -534,7 +579,11 @@ function getWidth() {
     return { width };
 }
 
-function getHeight() {
-    const { innerHeight: height } = window;
-    return {height };
+function getPadding() {
+    const { innerHeight: h } = window;
+    return h <= 1080 ? 2 :
+        h <= 1250 ? 5 : 
+        h <= 1275 ? 12 :
+        h <= 1300 ? 17 :
+        h <= 1325 ? 25 : 35;
 }
