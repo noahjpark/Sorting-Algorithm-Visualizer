@@ -1,25 +1,25 @@
 #array-container {
-    width: 100%;
     height: 100%;
     background-color: lightsteelblue;
     text-align: center;
 }
 
 .array-bar {
-    padding-bottom: 10px;
     display: inline-block;
     margin-top: 25px;
+    border-radius: 5px;
+    user-select: none;
 }
 
 .button {
-    color: white;
+    color: floralwhite;
     font-size: 16px;
-    font-family: monospace;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     display: inline-block;
     margin-left: 15px;
     margin-right: 15px;
-    margin-top: 40px;
     cursor: pointer;
+    user-select: none;
 }
 
 .button:hover {
@@ -29,56 +29,76 @@
 .selectedButton {
     color:#000000;
     font-size: 16px;
-    font-family: monospace;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     display: inline-block;
     margin-left: 15px;
     margin-right: 15px;
-    margin-top: 40px;
     cursor: pointer;
+    user-select: none;
 }
 
-.space {
-    width: 50px;
-    height: 12px;
-    margin-left: 100px;
-    margin-right: 100px;
-    display: inline-block;
+.menu-container {
+    display: flex;
+    background-color: steelblue;
+    height: 100%;
 }
 
 .menu {
+    margin: auto;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.menu.extra-padding {
+    padding: 50px 0;
+}
+
+.row {
     width: 100%;
-    background-color: steelblue;
+    flex: 1 0 100%;
+    align-items: center;
+    justify-content: center;
 }
 
 #page {
-    color: white;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    height: 100vh;
 }
 
-.h3 {
+.desc {
     font-size: 16px;
-    font-family: monospace;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     display: inline-block;
     margin-left: 15px;
     margin-right: 15px;
     cursor: default;
+    padding-bottom: 15px;
+    padding-top: 20px;
+    user-select: none;
+    color: floralwhite;
 }
 
-.h3:hover {
+.desc:hover {
     cursor: default;
 }
 
 .makeArrayButton {
+    width: 50px;
     background-color: #000000;
     border: none;
     color: white;
-    padding: 15px 45px;
-    margin-top: 0px;
+    padding: 15px 100px;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
     font-size: 15px;
     cursor: pointer;
     opacity: 0.75;
+    margin: auto;
+    border-color: black;
+    border-radius: 25px;
+    user-select: none;
 }
 
 .makeArrayButton:hover {
@@ -86,15 +106,14 @@
 }
 
 #makeArrayContainer {
-    display: inline-block;
+    margin: auto;
 }
 
-#sizeSliderContainer {
+.sliderContainer {
     display: inline-block;
-}
-
-#speedSliderContainer {
-    display: inline-block;
+    padding-left: 25px;
+    padding-right: 25px;
+    width: 250px;
 }
 
 .slider {
@@ -106,6 +125,8 @@
     opacity: 0.75;
     -webkit-transition: 0.2s;
     transition: opacity 0.2s;
+    border-color: #d3d3d3;
+    border-radius: 5px;
 }
 
 .slider:hover {
@@ -119,11 +140,6 @@
     height: 25px;
     background: #000000;
     cursor: pointer;
-}
-
-.slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
-    background: #04AA6D;
-    cursor: pointer;
+    border-color: black;
+    border-radius: 5px;
 }

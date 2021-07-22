@@ -14,7 +14,7 @@ export default class Visualizer extends React.Component {
         super (props);
         this.state = {
             array: [],
-            speed: 75,
+            speed: 15,
             inProgress: false,
             algorithm: "",
         };
@@ -23,7 +23,7 @@ export default class Visualizer extends React.Component {
     }
 
     componentDidMount() {
-        this.makeArray(5);
+        this.makeArray(49);
     }
 
     handleSizeChange(event) {
@@ -55,14 +55,31 @@ export default class Visualizer extends React.Component {
     makeArray(bars) {
         if (!this.state.inProgress) {
             const array = [];
-            for (let i = 0; i < bars; i++) {
+            for (let i = 0; i < bars; i++)
                 array.push(randomInt(5, 750));
-            }
             array.push(750);
             this.setState(() => {
                 return { array: array }; 
             });
         }
+    }
+
+    sizeIsPowerOfTwo(n) {
+        return parseInt( (Math.ceil((Math.log(n) / Math.log(2))))) === parseInt( (Math.floor(((Math.log(n) / Math.log(2))))));
+    }
+
+    findNearestPowerOfTwo() {
+        let n = this.state.array.length, l = n - 1, r = n + 1;
+
+        while (l > 1) {
+            if (this.sizeIsPowerOfTwo(l)) return l;
+            if (this.sizeIsPowerOfTwo(r)) return r;
+
+            if (l > 1) l--;
+            r++
+        }
+
+        return 2;
     }
 
     getMargin() {
@@ -71,10 +88,9 @@ export default class Visualizer extends React.Component {
             10 : array.length < 8 ?
             8 : array.length < 11 ?
             6 : array.length < 20 ?
-            4 : array.length < 50 ?
-            3 : array.length < 100 ?
-            2 : array.length < 130 ?
-            1 : 0.5;
+            4 : array.length < 40 ?
+            2.5 : array.length < 100 ?
+            1.5 : array.length < 130 ? 1 : 0.5;
     }
 
     markAsSorted(animations, bars) {
@@ -292,7 +308,7 @@ export default class Visualizer extends React.Component {
                     const [b1idx, b2idx, c] = animations[i];
                     const b1style = bars[b1idx].style;
                     const b2style = bars[b2idx].style;
-                    const color = c === 0 ? CONTRAST : SCANNED;
+                    const color = c === 0 ? COMPARE : SCANNED;
                     setTimeout(() => {
                         b1style.backgroundColor = color;
                         b2style.backgroundColor = color;
@@ -311,42 +327,198 @@ export default class Visualizer extends React.Component {
         }, 100);
     }
 
+    visualizeRadixSort() {
+        this.markInProgress("Radix");
+        setTimeout(() => {
+            const animations = getSortAnimations(this.state.array, "Radix");
+            const bars = document.getElementsByClassName('array-bar');
+
+            for (let i = 0; i < animations.length; i++) {
+                setTimeout(() => {
+                    const [idx, height, c] = animations[i];
+                    const bstyle = bars[idx].style;
+                    bstyle.height = `${height}px`;
+                    bstyle.backgroundColor = c === 1 ? SCANNED : MOVED;
+                }, i * this.state.speed);
+            }
+
+            this.markAsSorted(animations, bars);
+        }, 100);
+    }
+
+    visualizeShellSort() {
+        this.markInProgress("Shell");
+        setTimeout(() => {
+            const animations = getSortAnimations(this.state.array, "Shell");
+            const bars = document.getElementsByClassName('array-bar');
+
+            for (let i = 0; i < animations.length; i++) {
+                if (animations[i][2] <= 0) {
+                    const [b1idx, b2idx, c] = animations[i];
+                    const b1style = bars[b1idx].style;
+                    const b2style = bars[b2idx].style;
+                    const color = c === 0 ? COMPARE : UNSORTED;
+                    setTimeout(() => {
+                        b1style.backgroundColor = color;
+                        b2style.backgroundColor = color;
+                    }, i * this.state.speed);
+                } else {
+                    setTimeout(() => {
+                        const [idx, height, c] = animations[i];
+                        const bstyle = bars[idx].style;
+                        bstyle.height = `${height}px`;
+                        bstyle.backgroundColor = c === 2 ? COMPARE : UNSORTED;
+                    }, i * this.state.speed);
+                }
+            }
+
+            this.markAsSorted(animations, bars);
+        }, 100);
+    }
+
+    visualizeCocktailShakerSort() {
+        this.markInProgress("Cocktail");
+        setTimeout(() => {
+            const animations = getSortAnimations(this.state.array, "Cocktail");
+            const bars = document.getElementsByClassName('array-bar');
+
+            for (let i = 0; i < animations.length; i++) {
+                if (animations[i][2] <= 0) {
+                    const [b1idx, b2idx, c] = animations[i];
+                    const b1style = bars[b1idx].style;
+                    const b2style = bars[b2idx].style;
+                    const color = c === 0 ? COMPARE : UNSORTED;
+                    setTimeout(() => {
+                        b1style.backgroundColor = color;
+                        b2style.backgroundColor = color;
+                    }, i * this.state.speed);
+                } else {
+                    setTimeout(() => {
+                        const [idx, height] = animations[i];
+                        const bstyle = bars[idx].style;
+                        bstyle.height = `${height}px`;
+                    }, i * this.state.speed);
+                }
+            }
+
+            this.markAsSorted(animations, bars);
+        }, 100);
+    }
+
+    visualizeGnomeSort() {
+        this.markInProgress("Gnome");
+        setTimeout(() => {
+            const animations = getSortAnimations(this.state.array, "Gnome");
+            const bars = document.getElementsByClassName('array-bar');
+
+            for (let i = 0; i < animations.length; i++) {
+                if (animations[i][2] <= 0) {
+                    const [b1idx, b2idx, c] = animations[i];
+                    const b1style = bars[b1idx].style;
+                    const b2style = bars[b2idx].style;
+                    const color = c === 0 ? COMPARE : UNSORTED;
+                    setTimeout(() => {
+                        b1style.backgroundColor = color;
+                        b2style.backgroundColor = color;
+                    }, i * this.state.speed);
+                } else {
+                    setTimeout(() => {
+                        const [idx, height, c] = animations[i];
+                        const bstyle = bars[idx].style;
+                        bstyle.height = `${height}px`;
+                        bstyle.backgroundColor = c === 1 ? UNSORTED : MOVED;
+                    }, i * this.state.speed);
+                }
+            }
+
+            this.markAsSorted(animations, bars);
+        }, 100);
+    }
+
+    visualizeBitonicSort() {
+        if (!this.sizeIsPowerOfTwo(this.state.array.length))
+            this.makeArray(this.findNearestPowerOfTwo() - 1);
+
+        this.markInProgress("Bitonic");
+        setTimeout(() => {
+            const animations = getSortAnimations(this.state.array, "Bitonic");
+            const bars = document.getElementsByClassName('array-bar');
+
+            for (let i = 0; i < animations.length; i++) {
+                if (animations[i][2] <= 0) {
+                    const [b1idx, b2idx, c] = animations[i];
+                    const b1style = bars[b1idx].style;
+                    const b2style = bars[b2idx].style;
+                    const color = c === 0 ? COMPARE : UNSORTED;
+                    setTimeout(() => {
+                        b1style.backgroundColor = color;
+                        b2style.backgroundColor = color;
+                    }, i * this.state.speed);
+                } else {
+                    setTimeout(() => {
+                        const [idx, height] = animations[i];
+                        const bstyle = bars[idx].style;
+                        bstyle.height = `${height}px`;
+                    }, i * this.state.speed);
+                }
+            }
+
+            this.markAsSorted(animations, bars);
+        }, 100);
+    }
+
     render() {
         const { array, inProgress, algorithm } = this.state;
-        const numHeightTop = Math.floor(getHeight().height / 7);
-        const numHeightBottom = Math.floor(getHeight().height / 10);
+        const h = getHeight().height;
+        const percentBottomPadding = 
+            h <= 1080 ? 2 :
+            h <= 1250 ? 5 : 
+            h <= 1275 ? 12 :
+            h <= 1300 ? 17 :
+            h <= 1325 ? 25 : 35;
         const numWidth = Math.floor(getWidth().width / (array.length * 1.4));
         const numMargin = this.getMargin();
 
         return (
             <div id="page">
-                <div className="menu" style={{height: `${numHeightTop}px`}}>
-                    <div id="makeArrayContainer">
-                        <h3>Make New Array</h3>
-                        <div className="makeArrayButton" onClick={!inProgress ? () => this.makeArray(array.length - 1) : null}>Shuffle!</div>
+                <div className="row">
+                    <div className="menu-container">
+                        <div className="menu">
+                            <div className="makeArrayButton" onClick={!inProgress ? () => this.makeArray(array.length - 1) : null}>Shuffle!</div>
+                            <div className="sliderContainer">
+                                <div className="desc">Change Array Size</div>
+                                <input type="range" min="1" max="250" onChange={!inProgress ? this.handleSizeChange : null} className="slider" />
+                            </div>
+                            <div className="sliderContainer">
+                            <div className="desc">Change Sorting Speed</div>
+                                <input type="range" min="1" max="75" onChange={!inProgress ? this.handleSpeedChange : null} className="slider" style={{direction: 'rtl'}} />
+                            </div>
+                        </div>
                     </div>
-                    <div className="space" />
-                    <div id="sizeSliderContainer">
-                        <h3>Change Array Size</h3>
-                        <input type="range" min="1" max="250" onChange={!inProgress ? this.handleSizeChange : null} className="slider" />
-                    </div>
-                    <div className="space" />
-                    <div id="speedSliderContainer">
-                        <h3>Change Sorting Speed</h3>
-                        <input type="range" min="1" max="75" onChange={!inProgress ? this.handleSpeedChange : null} className="slider" style={{direction: 'rtl'}} />
+                    
+                </div>
+                <div className="row">
+                    <div id="array-container">
+                        {array.map((value, idx) => ( <div className="array-bar" key={idx} style={{paddingBottom: `${percentBottomPadding}%`, height: `${value}px`, width: `${numWidth}px`, marginLeft: `${numMargin}px`, marginRight: `${numMargin}px`, backgroundColor: UNSORTED}} /> ))}
                     </div>
                 </div>
-                <div id="array-container">
-                    {array.map((value, idx) => ( <div className="array-bar" key={idx} style={{height: `${value}px`, width: `${numWidth}px`, marginLeft: `${numMargin}px`, marginRight: `${numMargin}px`, backgroundColor: UNSORTED}} /> ))}
-                </div>
-                <div className="menu" style={{height: `${numHeightBottom}px`}}>
-                    <div className={algorithm === "Selection" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeSelectionSort() : null}>Selection Sort</div>
-                    <div className={algorithm === "Insertion" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeInsertionSort() : null}>Insertion Sort</div>
-                    <div className={algorithm === "Bubble" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeBubbleSort() : null}>Bubble Sort</div>
-                    <div className={algorithm === "Merge" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeMergeSort() : null}>Merge Sort</div>
-                    <div className={algorithm === "Quick" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeQuickSort() : null}>Quick Sort</div>
-                    <div className={algorithm === "Counting" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeCountingSort() : null}>Counting Sort</div>
-                    <div className={algorithm === "Heap" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeHeapSort() : null}>Heap Sort</div>
+                <div className="row">
+                    <div className="menu-container">
+                        <div className="menu extra-padding">
+                            <div className={algorithm === "Selection" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeSelectionSort() : null}>Selection Sort</div>
+                            <div className={algorithm === "Insertion" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeInsertionSort() : null}>Insertion Sort</div>
+                            <div className={algorithm === "Bubble" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeBubbleSort() : null}>Bubble Sort</div>
+                            <div className={algorithm === "Merge" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeMergeSort() : null}>Merge Sort</div>
+                            <div className={algorithm === "Quick" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeQuickSort() : null}>Quick Sort</div>
+                            <div className={algorithm === "Counting" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeCountingSort() : null}>Counting Sort</div>
+                            <div className={algorithm === "Heap" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeHeapSort() : null}>Heap Sort</div>
+                            <div className={algorithm === "Radix" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeRadixSort() : null}>Radix Sort</div>
+                            <div className={algorithm === "Shell" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeShellSort() : null}>Shell Sort</div>
+                            <div className={algorithm === "Cocktail" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeCocktailShakerSort() : null}>Cocktail Shaker Sort</div>
+                            <div className={algorithm === "Gnome" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeGnomeSort() : null}>Gnome Sort</div>
+                            <div className={algorithm === "Bitonic" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeBitonicSort() : null}>Bitonic Sort</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
@@ -364,5 +536,5 @@ function getWidth() {
 
 function getHeight() {
     const { innerHeight: height } = window;
-    return { height };
+    return {height };
 }
