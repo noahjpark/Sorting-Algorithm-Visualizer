@@ -16,6 +16,7 @@ export function getSortAnimations(arr, algorithm) {
     else if (algorithm === "Gnome") gnomeSort(arr, animations);
     else if (algorithm === "Bitonic") bitonicSort(arr, animations, 0, arr.length, 1);
     else if (algorithm === "Comb") combSort(arr, animations);
+    else if (algorithm === "Pancake") pancakeSort(arr, animations);
 
     console.log(areEqual(copy, arr));
 
@@ -218,7 +219,7 @@ function heapify(arr, animations, n, i) {
 
 // Radix Sort
 function radixSort(arr, animations) {
-    let max = findMax(arr);
+    let max = arr[findMax(arr, arr.length - 1)];
     for (let i = 1; Math.floor(max / i) > 0; i *= 10)
         countingSortRadix(arr, i, animations);
 }
@@ -397,6 +398,38 @@ function combSort(arr, animations) {
     animations.push([n - 1, arr[n - 1], 1]);
 }
 
+// Pancake Sort algorithm
+function pancakeSort(arr, animations) {
+    animations.push([arr.length - 1, arr[arr.length - 1], 1]);
+
+    for (let i = arr.length - 1; i > 1; i--) {
+        let max = findMax(arr, i);
+
+        animations.push([max, arr[max], 2]);
+
+        if (max != i) {
+            flip(arr, animations, max);
+            flip(arr, animations, i - 1);
+        }
+
+        animations.push([i - 1, arr[i - 1], 1]);
+        for (let j = 0; j < i - 1; j++)
+            animations.push([j, arr[j], 3]);
+    }
+
+    animations.push([0, arr[0], 1]);
+}
+
+// Flip helper for Pancake Sort
+function flip(arr, animations, end) {
+    for (let i = 0; i <= end; i++, end--) {
+        animations.push([i, end, 0]);
+        swap(arr, i, end);
+        animations.push([i, arr[i], 2]);
+        animations.push([end, arr[end], 2]);
+    }
+}
+
 // Next Gap helper to Comb Sort
 function nextGap(gap) {
     gap = parseInt((gap * 10) / 13, 10);
@@ -404,10 +437,10 @@ function nextGap(gap) {
 }
 
 // Finds the max in the array
-function findMax(arr) {
+function findMax(arr, n) {
     let max = 0;
-    for (let i = 0; i < arr.length - 1; i++)
-        max = Math.max(max, arr[i]);
+    for (let i = 1; i < n; i++)
+        if (arr[i] > arr[max]) max = i;
     return max;
 }
 

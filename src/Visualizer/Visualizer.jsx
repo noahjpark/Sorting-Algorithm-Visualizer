@@ -3,9 +3,9 @@ import { getSortAnimations } from '../Algorithms/SortingAlgorithms.js';
 import './Visualizer.css';
 
 const UNSORTED = 'black';
-const COMPARE = 'crimson';
-const SORTED = 'chartreuse';
-const MOVED = 'darkviolet';
+const COMPARE = 'maroon';
+const SORTED = 'seagreen';
+const MOVED = 'mediumslateblue';
 const SCANNED = 'lightseagreen';
 const CONTRAST = 'ivory';
 
@@ -516,10 +516,41 @@ export default class Visualizer extends React.Component {
         }, 100);
     }
 
+    // Visualizes Pancake sort
+    visualizePancakeSort() {
+        this.markInProgress("Pancake");
+        setTimeout(() => {
+            const animations = getSortAnimations(this.state.array, "Pancake");
+            const bars = document.getElementsByClassName('array-bar');
+
+            for (let i = 0; i < animations.length; i++) {
+                if (animations[i][2] <= 0) {
+                    const [b1idx, b2idx, c] = animations[i];
+                    const b1style = bars[b1idx].style;
+                    const b2style = bars[b2idx].style;
+                    const color = c === 0 ? COMPARE : UNSORTED;
+                    setTimeout(() => {
+                        b1style.backgroundColor = color;
+                        b2style.backgroundColor = color;
+                    }, i * this.state.speed);
+                } else {
+                    setTimeout(() => {
+                        const [idx, height, c] = animations[i];
+                        const bstyle = bars[idx].style;
+                        bstyle.height = `${height}px`;
+                        bstyle.backgroundColor = c === 1 ? MOVED : c === 2 ? SCANNED : UNSORTED;
+                    }, i * this.state.speed);
+                }
+            }
+
+            this.markAsSorted(animations, bars);
+        }, 100);
+    }
+
     // Renders the page
     render() {
         const { array, inProgress, algorithm } = this.state;
-        const percentBottomPadding = getPadding();
+        const percentBottomPadding = 3;
         const numWidth = Math.floor(getWidth().width / (array.length * 1.4));
         const numMargin = this.getMargin();
 
@@ -562,6 +593,7 @@ export default class Visualizer extends React.Component {
                             <div className={algorithm === "Gnome" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeGnomeSort() : null}>Gnome Sort</div>
                             <div className={algorithm === "Bitonic" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeBitonicSort() : null}>Bitonic Sort</div>
                             <div className={algorithm === "Comb" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizeCombSort() : null}>Comb Sort</div>
+                            <div className={algorithm === "Pancake" ? "selectedButton" : "button"} onClick={!inProgress ? () => this.visualizePancakeSort() : null}>Pancake Sort</div>
                         </div>
                     </div>
                 </div>
