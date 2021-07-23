@@ -98,6 +98,24 @@ export default class Visualizer extends React.Component {
             1.5 : array.length < 130 ? 1 : 0.5;
     }
 
+    getPhoneMargin() {
+        const { array } = this.state;
+        console.log(array.length);
+        return array.length < 5 ? 
+            7 : array.length < 10 ? 
+            5 : array.length < 15 ? 
+            3 : array.length < 20 ?
+            2 : array.length < 40 ?
+            1 : array.length < 70 ?
+            0.85 : array.length < 90 ?
+            0.7 : array.length < 120 ?
+            0.6 : array.length < 130 ?
+            0.5 : array.length < 145 ?
+            0.45 : array.length < 160 ?
+            0.4 : array.length < 200 ? 
+            0.35 : 0.3;
+    }
+
     // Marks the array as sorted (turns green) then calls the reset helper
     markAsSorted(animations, bars) {
         for (let i = 0; i < animations.length; i++) {
@@ -551,8 +569,9 @@ export default class Visualizer extends React.Component {
     render() {
         const { array, inProgress, algorithm } = this.state;
         const percentBottomPadding = 3;
-        const numWidth = Math.floor(getWidth().width / (array.length * 1.4));
-        const numMargin = this.getMargin();
+        const width = getWidth().width;
+        const numWidth = Math.floor(width / (array.length * 1.4));
+        const numMargin = width < 450 ? this.getPhoneMargin() : this.getMargin();
 
         return (
             <div id="page">
